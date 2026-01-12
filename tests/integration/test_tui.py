@@ -5,9 +5,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from xword.formats.markdown import MarkdownParser
-from xword.core.puzzle import PuzzleEngine
 from xword.core.models import Direction
+from xword.core.puzzle import PuzzleEngine
+from xword.formats.markdown import MarkdownParser
 
 
 def test_tui_game_flow():
@@ -35,7 +35,7 @@ def test_tui_game_flow():
             if cell and not cell.is_black:
                 # Enter correct letter
                 engine.set_cell_entry(session_id, row, col, cell.letter)
-                
+
                 # Check cell is correct
                 updated_cell = session.grid.get_cell(row, col)
                 assert updated_cell.user_entry == cell.letter
@@ -107,7 +107,7 @@ def test_hint_system():
     if puzzle.across_clues:
         clue = puzzle.across_clues[0]
         hint = engine.get_hint(session_id, clue)
-        
+
         # Hint should be a letter
         assert hint == "" or (len(hint) == 1 and hint.isalpha())
 

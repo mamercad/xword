@@ -16,6 +16,6 @@ __all__ = [
     "Direction",
     "Grid",
     "PuzzleDefinition",
-    "PuzzleSession",
     "PuzzleEngine",
+    "PuzzleSession",
 ]

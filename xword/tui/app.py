@@ -1,12 +1,12 @@
 """Textual-based TUI application for xword."""
 
 from textual.app import ComposeResult, on
-from textual.containers import Container, Vertical, Horizontal, ScrollableContainer
-from textual.widgets import Header, Footer, Static, Input
 from textual.binding import Binding
+from textual.containers import Horizontal, Vertical
 from textual.reactive import reactive
+from textual.widgets import Footer, Header, Static
 
-from xword.core.models import PuzzleDefinition, Direction, Cell
+from xword.core.models import Cell, Direction, PuzzleDefinition
 from xword.core.puzzle import PuzzleEngine
 
 
@@ -27,28 +27,28 @@ class GridDisplay(Static):
     def render(self) -> str:
         """Render the grid."""
         lines = []
-        
+
         session = self.engine.get_session(self.session_id)
         if not session:
             return "No active session"
-        
+
         grid = session.grid
-        
+
         # Header with column numbers
         col_header = "    "
         for col in range(grid.cols):
             col_header += f"{col+1:2} "
         lines.append(col_header)
-        
+
         # Grid rows
         for row in range(grid.rows):
             line = f"{row+1:2} "
             for col in range(grid.cols):
                 cell = grid.get_cell(row, col)
-                
+
                 # Highlight cursor position
                 is_cursor = (row == self.cursor_row and col == self.cursor_col)
-                
+
                 if cell and cell.is_black:
                     if is_cursor:
                         line += "[reverse]##[/reverse] "
@@ -61,7 +61,7 @@ class GridDisplay(Static):
                         if direction in cell.clue_numbers:
                             clue_num = str(cell.clue_numbers[direction])
                             break
-                    
+
                     # Color correct answers
                     if cell.is_correct() and cell.user_entry:
                         style = "[green]"
@@ -69,9 +69,9 @@ class GridDisplay(Static):
                     else:
                         style = ""
                         end_style = ""
-                    
+
                     cell_str = f"{style}{entry}{end_style}{clue_num:1}"
-                    
+
                     if is_cursor:
                         line += f"[reverse]{cell_str}[/reverse]"
                     else:
@@ -82,9 +82,9 @@ class GridDisplay(Static):
                         line += "[reverse]?? [/reverse]"
                     else:
                         line += "?? "
-            
+
             lines.append(line)
-        
+
         return "\n".join(lines)
 
     def on_mount(self) -> None:
@@ -146,26 +146,26 @@ class CluePanel(Static):
     def render(self) -> str:
         """Render the clues."""
         lines = []
-        
+
         lines.append("[bold]ACROSS[/bold]")
         lines.append("")
-        
+
         for clue in self.puzzle.across_clues:
             if clue.number == self.current_across:
                 lines.append(f"[reverse][bold]{clue.number}. {clue.text} ({clue.length})[/bold][/reverse]")
             else:
                 lines.append(f"{clue.number}. {clue.text} ({clue.length})")
-        
+
         lines.append("")
         lines.append("[bold]DOWN[/bold]")
         lines.append("")
-        
+
         for clue in self.puzzle.down_clues:
             if clue.number == self.current_down:
                 lines.append(f"[reverse][bold]{clue.number}. {clue.text} ({clue.length})[/bold][/reverse]")
             else:
                 lines.append(f"{clue.number}. {clue.text} ({clue.length})")
-        
+
         return "\n".join(lines)
 
 
@@ -217,18 +217,18 @@ class XwordApp:
             def compose(self) -> ComposeResult:
                 """Create child widgets for the app."""
                 yield Header()
-                
+
                 with Horizontal():
                     with Vertical():
                         self.grid_display = GridDisplay(self.puzzle, self.engine, self.session_id)
                         yield self.grid_display
-                        
+
                         self.status_bar = StatusBar(self.puzzle)
                         yield self.status_bar
-                    
+
                     self.clue_panel = CluePanel(self.puzzle)
                     yield self.clue_panel
-                
+
                 yield Footer()
 
             def action_move_up(self) -> None:

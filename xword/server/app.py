@@ -1,17 +1,14 @@
 """FastAPI server for multiplayer crossword puzzles."""
 
-from contextlib import asynccontextmanager
-from typing import Dict, Optional
 import uuid
+from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, WebSocket, HTTPException, WebSocketDisconnect, Depends
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 
-from xword.core.puzzle import PuzzleEngine
 from xword.core.models import PuzzleDefinition
+from xword.core.puzzle import PuzzleEngine
 from xword.formats.markdown import MarkdownParser
-
 
 # ============================================================================
 # Data Models for API
@@ -30,7 +27,7 @@ class CellEntry(BaseModel):
 
     row: int
     col: int
-    letter: Optional[str] = None
+    letter: str | None = None
 
 
 class HintRequest(BaseModel):
@@ -48,10 +45,10 @@ class HintRequest(BaseModel):
 puzzle_engine = PuzzleEngine()
 
 # Loaded puzzles: puzzle_id -> PuzzleDefinition
-loaded_puzzles: Dict[str, PuzzleDefinition] = {}
+loaded_puzzles: dict[str, PuzzleDefinition] = {}
 
 # Active WebSocket connections for multiplayer
-active_connections: Dict[str, list] = {}
+active_connections: dict[str, list] = {}
 
 
 # ============================================================================
@@ -146,7 +143,7 @@ async def load_puzzle(puzzle: PuzzleLoad):
             "status": "loaded",
         }
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to parse puzzle: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Failed to parse puzzle: {e!s}")
 
 
 @app.get("/puzzles/{puzzle_id}")
@@ -197,7 +194,7 @@ async def create_session(puzzle_id: str, username: str = "anonymous"):
             "status": "created",
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to create session: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to create session: {e!s}")
 
 
 @app.get("/sessions/{session_id}")

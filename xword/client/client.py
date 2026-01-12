@@ -1,8 +1,9 @@
 """Client for connecting to xword server."""
 
-import asyncio
 import json
-from typing import Optional, Callable, Any
+from collections.abc import Callable
+from typing import Any
+
 import httpx
 import websockets
 
@@ -60,7 +61,7 @@ class XwordClient:
         response = await self.http_client.get(f"/sessions/{self.session_id}")
         return response.json()
 
-    async def submit_entry(self, row: int, col: int, letter: Optional[str]) -> dict:
+    async def submit_entry(self, row: int, col: int, letter: str | None) -> dict:
         """Submit a cell entry."""
         if not self.session_id:
             raise ValueError("No active session")
@@ -89,9 +90,9 @@ class XwordClient:
 
     async def connect_multiplayer(
         self,
-        on_entry: Optional[Callable[[dict], Any]] = None,
-        on_check: Optional[Callable[[dict], Any]] = None,
-        on_user_left: Optional[Callable[[dict], Any]] = None,
+        on_entry: Callable[[dict], Any] | None = None,
+        on_check: Callable[[dict], Any] | None = None,
+        on_user_left: Callable[[dict], Any] | None = None,
     ) -> None:
         """Connect to multiplayer WebSocket."""
         if not self.session_id or not self.username:
@@ -124,7 +125,7 @@ class XwordClient:
                 except websockets.exceptions.ConnectionClosed:
                     break
 
-    async def send_entry(self, row: int, col: int, letter: Optional[str]) -> None:
+    async def send_entry(self, row: int, col: int, letter: str | None) -> None:
         """Send a cell entry via WebSocket."""
         if not self.websocket:
             raise ValueError("Not connected to multiplayer")

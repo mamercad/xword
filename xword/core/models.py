@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional, Set, Tuple
 
 
 class Direction(str, Enum):
@@ -18,10 +17,10 @@ class Cell:
 
     row: int
     col: int
-    letter: Optional[str] = None  # The solution letter
+    letter: str | None = None  # The solution letter
     is_black: bool = False  # Whether this is a black/blocked cell
-    user_entry: Optional[str] = None  # What the user has entered
-    clue_numbers: Dict[Direction, int] = field(default_factory=dict)
+    user_entry: str | None = None  # What the user has entered
+    clue_numbers: dict[Direction, int] = field(default_factory=dict)
 
     def is_empty(self) -> bool:
         """Check if cell is empty (no letter)."""
@@ -55,7 +54,7 @@ class Clue:
     start_row: int
     start_col: int
     length: int
-    cells: List[Tuple[int, int]] = field(default_factory=list)  # (row, col) coordinates
+    cells: list[tuple[int, int]] = field(default_factory=list)  # (row, col) coordinates
     answer: str = ""
 
     def to_dict(self) -> dict:
@@ -78,9 +77,9 @@ class Grid:
 
     rows: int
     cols: int
-    cells: Dict[Tuple[int, int], Cell] = field(default_factory=dict)
+    cells: dict[tuple[int, int], Cell] = field(default_factory=dict)
 
-    def get_cell(self, row: int, col: int) -> Optional[Cell]:
+    def get_cell(self, row: int, col: int) -> Cell | None:
         """Get a cell at the given position."""
         if 0 <= row < self.rows and 0 <= col < self.cols:
             return self.cells.get((row, col))
@@ -107,12 +106,12 @@ class PuzzleDefinition:
     title: str
     description: str
     grid: Grid
-    across_clues: List[Clue] = field(default_factory=list)
-    down_clues: List[Clue] = field(default_factory=list)
+    across_clues: list[Clue] = field(default_factory=list)
+    down_clues: list[Clue] = field(default_factory=list)
     difficulty: str = "medium"  # easy, medium, hard
-    source: Optional[str] = None  # Where the puzzle came from
+    source: str | None = None  # Where the puzzle came from
 
-    def all_clues(self) -> List[Clue]:
+    def all_clues(self) -> list[Clue]:
         """Get all clues."""
         return self.across_clues + self.down_clues
 
@@ -137,9 +136,9 @@ class PuzzleSession:
     puzzle: PuzzleDefinition
     grid: Grid  # Copy of the grid with user entries
     start_time: float
-    participants: Set[str] = field(default_factory=set)
+    participants: set[str] = field(default_factory=set)
     is_completed: bool = False
-    completed_at: Optional[float] = None
+    completed_at: float | None = None
 
     def to_dict(self) -> dict:
         """Convert to dictionary for serialization."""

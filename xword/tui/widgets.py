@@ -1,10 +1,7 @@
 """Custom Textual widgets for xword TUI."""
 
-from textual.widgets import Static
 from textual.reactive import reactive
-
-from xword.core.models import PuzzleDefinition, Direction
-from xword.core.puzzle import PuzzleEngine
+from textual.widgets import Static
 
 
 class HelpPanel(Static):

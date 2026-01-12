@@ -1,7 +1,6 @@
 """Crossword puzzle engine."""
 
 import time
-from typing import List, Optional, Tuple
 
 from xword.core.models import Cell, Clue, Direction, Grid, PuzzleDefinition, PuzzleSession
 
@@ -40,7 +39,7 @@ class PuzzleEngine:
         return session
 
     def set_cell_entry(
-        self, puzzle_id: str, row: int, col: int, letter: Optional[str]
+        self, puzzle_id: str, row: int, col: int, letter: str | None
     ) -> bool:
         """Set a user entry in a cell. Returns True if valid."""
         if puzzle_id not in self.sessions:
@@ -61,7 +60,7 @@ class PuzzleEngine:
 
     def get_clue_for_cell(
         self, puzzle_id: str, row: int, col: int, direction: Direction
-    ) -> Optional[Clue]:
+    ) -> Clue | None:
         """Get the clue that applies to a cell in a given direction."""
         if puzzle_id not in self.sessions:
             return None
@@ -85,7 +84,7 @@ class PuzzleEngine:
 
     def get_cells_for_clue(
         self, puzzle_id: str, clue: Clue
-    ) -> List[Cell]:
+    ) -> list[Cell]:
         """Get all cells for a clue."""
         if puzzle_id not in self.sessions:
             return []
@@ -150,7 +149,7 @@ class PuzzleEngine:
         # All cells revealed
         return ""
 
-    def get_session(self, puzzle_id: str) -> Optional[PuzzleSession]:
+    def get_session(self, puzzle_id: str) -> PuzzleSession | None:
         """Get a session by puzzle ID."""
         return self.sessions.get(puzzle_id)
 
