@@ -1,0 +1,78 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xword"
+version = "0.1.0"
+description = "Cooperative crossword puzzle application with multiplayer support"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "xword contributors"}
+]
+requires-python = ">=3.10"
+keywords = ["crossword", "puzzle", "tui", "game", "multiplayer"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Games/Entertainment",
+]
+
+dependencies = [
+    "textual>=0.50.0",          # TUI framework
+    "pydantic>=2.0",            # Data validation
+    "fastapi>=0.109.0",         # Web server
+    "uvicorn>=0.27.0",          # ASGI server
+    "httpx>=0.26.0",            # HTTP client for Wikipedia
+    "websockets>=12.0",         # WebSocket support
+    "python-dotenv>=1.0.0",     # Environment variables
+    "pyyaml>=6.0",              # YAML support for configs
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0",
+    "pre-commit>=3.5.0",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.4.0",
+]
+
+[project.scripts]
+xword = "xword.cli:main"
+
+[tool.setuptools]
+packages = ["xword"]
+
+[tool.setuptools.package-data]
+xword = ["py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "I", "N", "UP"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
