@@ -31,7 +31,7 @@ def main():
     # Server command
     server_parser = subparsers.add_parser("serve", help="Run a multiplayer server")
     server_parser.add_argument("-p", "--port", type=int, default=8000, help="Port to listen on")
-    server_parser.add_argument("-h", "--host", default="0.0.0.0", help="Host to bind to")
+    server_parser.add_argument("-H", "--host", default="0.0.0.0", help="Host to bind to")
 
     # Generate clues command
     generate_parser = subparsers.add_parser("generate-clues", help="Generate clues from Wikipedia")
